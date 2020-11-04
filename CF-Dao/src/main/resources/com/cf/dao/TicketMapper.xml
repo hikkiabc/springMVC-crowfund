@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cf.dao.TicketMapper">
+  <resultMap id="BaseResultMap" type="com.cf.beans.Ticket">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="procId" jdbcType="VARCHAR" property="procid" />
+    <result column="captcha" jdbcType="VARCHAR" property="captcha" />
+    <result column="step" jdbcType="VARCHAR" property="step" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_ticket
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cf.beans.Ticket">
+    insert into t_ticket (id, member_id, procId, 
+      captcha, step, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{procid,jdbcType=VARCHAR}, 
+      #{captcha,jdbcType=VARCHAR}, #{step,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.cf.beans.Ticket">
+    update t_ticket
+    set member_id = #{memberId,jdbcType=INTEGER},
+      procId = #{procid,jdbcType=VARCHAR},
+      captcha = #{captcha,jdbcType=VARCHAR},
+      step = #{step,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, member_id, procId, captcha, step, status
+    from t_ticket
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, member_id, procId, captcha, step, status
+    from t_ticket
+  </select>
+  <select id="queryByMemberId" resultMap="BaseResultMap">
+    select * from t_ticket where member_id=#{id} and status='0'
+  </select>
+  <update id="updateTicketStepByMemberId" >
+    update t_ticket set step = #{arg1} where member_id= #{arg0} and status='0'
+  </update>
+  <update id="updateTicket" >
+    update t_ticket set step=#{step} , procId=#{procid} ,captcha=#{captcha} where id=#{id}
+  </update>
+  <update id="updateTicketStatus">
+    update t_ticket set status="1" where member_id=#{id} and status="0"
+  </update>
+</mapper>

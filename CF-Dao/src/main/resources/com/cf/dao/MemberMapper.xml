@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cf.dao.MemberMapper">
+  <resultMap id="BaseResultMap" type="com.cf.beans.Member">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cf.beans.Member">
+    insert into t_member (id, username, nickname, 
+      status, password, type
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.cf.beans.Member">
+    update t_member
+    set username = #{username,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      password = #{password,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, username, nickname, status, password, type
+    from t_member
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, username, nickname, status, password, type
+    from t_member
+  </select>
+  <select id="login" resultMap="BaseResultMap">
+    select username,nickname,id,type,status,password from t_member where username=#{accname} and password=#{password}
+  </select>
+  <update id="updateAccTypeById" >
+    update t_member set type=#{type} where id=#{id}
+  </update>
+  <select id="queryCertiByAccType" resultType="Map">
+    select name,id from t_certi where id in (select certi_id from t_acctype_certi where acc_type=#{acctype})
+  </select>
+  <insert id="insertMemberCerti">
+    insert into t_member_certi (member_id,certi_id,img_name) values
+    <foreach collection="list" item="i" separator=",">
+      (#{i.memberId},#{i.certiId},#{i.filename})
+    </foreach>
+  </insert>
+  <update id="updateStatus">
+    update t_member set status=#{status} where id=#{id}
+  </update>
+  <select id="queryMemberByInsId" resultMap="BaseResultMap">
+    select t_member.* from t_member join t_ticket on t_member.id=t_ticket.member_id where t_ticket.procId=#{id}
+  </select>
+  <select id="queryCertiByMemberId" resultType="Map">
+    select t_member_certi.img_name,t_member_certi.certi_id,t_certi.name
+    from t_member_certi join t_certi on t_member_certi.certi_id=t_certi.id
+     where t_member_certi.member_id=#{id}
+  </select>
+</mapper>

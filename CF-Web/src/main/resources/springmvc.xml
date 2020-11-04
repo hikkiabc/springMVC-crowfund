@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+<context:component-scan base-package="com.cf.controller" use-default-filters="false">
+    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+</context:component-scan>
+    <bean  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/pages/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+<property name="exceptionMappings">
+    <props>
+        <prop key="com.cf.exception.LoginFailException">login</prop>
+    </props>
+</property>
+    </bean>
+    <bean p:defaultEncoding="utf-8" id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<property name="resolveLazily" value="true"></property>
+
+    </bean>
+<mvc:interceptors>
+<!--    <mvc:interceptor>-->
+<!--        <mvc:mapping path="/**"/>-->
+
+<!--        <mvc:exclude-mapping path="/model/**/**"/>-->
+<!--        <bean class="com.cf.interceptor.LoginInterceptor" id="LoginInterceptor">  </bean>-->
+
+<!--    </mvc:interceptor>-->
+    <mvc:interceptor>
+        <mvc:mapping path="/**"/>
+
+        <mvc:exclude-mapping path="/model/**/**"/>
+        <bean class="com.cf.interceptor.PermissionInterceptor" id="permissionInterceptor"></bean>
+
+    </mvc:interceptor>
+</mvc:interceptors>
+<!--    <mvc:default-servlet-handler></mvc:default-servlet-handler>-->
+<!--    <mvc:annotation-driven></mvc:annotation-driven>-->
+    
+</beans>
+

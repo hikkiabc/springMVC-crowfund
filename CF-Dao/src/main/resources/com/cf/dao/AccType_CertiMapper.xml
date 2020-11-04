@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cf.dao.AccType_CertiMapper">
+  <resultMap id="BaseResultMap" type="com.cf.beans.AccType_Certi">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="acc_type" jdbcType="INTEGER" property="accType" />
+    <result column="certi_id" jdbcType="INTEGER" property="certiId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_acctype_certi
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cf.beans.AccType_Certi">
+    insert into t_acctype_certi (id, acc_type, certi_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{accType,jdbcType=INTEGER}, #{certiId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.cf.beans.AccType_Certi">
+    update t_acctype_certi
+    set acc_type = #{accType,jdbcType=INTEGER},
+      certi_id = #{certiId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, acc_type, certi_id
+    from t_acctype_certi
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, acc_type, certi_id
+    from t_acctype_certi
+  </select>
+  <select id="queryAccTypeAndCertiId" resultType="map">
+    select * from t_acctype_certi
+  </select>
+  <delete id="delete" parameterType="com.cf.beans.AccType_Certi">
+    delete from t_acctype_certi where certi_id=#{certiId} and acc_type=#{accType}
+  </delete>
+</mapper>

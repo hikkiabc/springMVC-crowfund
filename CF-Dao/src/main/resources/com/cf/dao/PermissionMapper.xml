@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cf.dao.PermissionMapper">
+  <resultMap id="BaseResultMap" type="com.cf.beans.Permission">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_permission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cf.beans.Permission">
+    insert into t_permission (id, name, pid, 
+      icon, url)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, 
+      #{icon,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.cf.beans.Permission">
+    update t_permission
+    set name = #{name,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, pid, icon, url
+    from t_permission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, pid, icon, url
+    from t_permission
+  </select>
+
+<!--  <select id="queryPermissions" resultMap="BaseResultMap">-->
+<!--    select * from t_permission where-->
+<!--     <if test="pid==null">-->
+<!--       pid is  null-->
+<!--  </if>-->
+<!--  <if test="pid!=null">-->
+<!--    pid=  #{pid}-->
+<!--  </if>-->
+<!--  </select>-->
+  <select id="queryPermissions" resultMap="BaseResultMap">
+    select * from t_permission
+  </select>
+  <select id="queryPermissionIdByRoleId" resultType="Integer">
+    select permission_id from t_role_permission where role_id =#{roleId}
+  </select>
+</mapper>

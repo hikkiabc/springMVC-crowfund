@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_05q5fyo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:process id="Process_1ypro9s" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0ytp1le</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0ytp1le" sourceRef="StartEvent_1" targetRef="Activity_08q46gz" />
+    <bpmn:endEvent id="Event_1qef1q5">
+      <bpmn:incoming>Flow_0cky08u</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0cky08u" sourceRef="Activity_08q46gz" targetRef="Event_1qef1q5" />
+    <bpmn:serviceTask  id="Activity_08q46gz" name="sendmail" activiti:type="mail">
+      <bpmn:extensionElements>
+
+        <activiti:field name="to">
+
+          <activiti:string><![CDATA[test@my.com]]></activiti:string>
+
+        </activiti:field>
+
+        <activiti:field name="from">
+
+          <activiti:string><![CDATA[admin@my.com]]></activiti:string>
+
+        </activiti:field>
+
+        <activiti:field name="subject">
+
+          <activiti:string><![CDATA[Activity测试邮件]]></activiti:string>
+
+        </activiti:field>
+
+        <activiti:field name="text">
+
+          <activiti:string><![CDATA[这是测试邮件]]></activiti:string>
+
+        </activiti:field>
+
+        <activiti:field name="html">
+
+          <activiti:string><![CDATA[测试]]></activiti:string>
+
+        </activiti:field>
+
+        <activiti:field name="charset">
+
+          <activiti:string><![CDATA[UTF-8]]></activiti:string>
+
+        </activiti:field>
+
+      </bpmn:extensionElements>
+
+      <bpmn:incoming>Flow_0ytp1le</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cky08u</bpmn:outgoing>
+    </bpmn:serviceTask >
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1ypro9s">
+      <bpmndi:BPMNEdge id="Flow_0cky08u_di" bpmnElement="Flow_0cky08u">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="432" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ytp1le_di" bpmnElement="Flow_0ytp1le">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qef1q5_di" bpmnElement="Event_1qef1q5">
+        <dc:Bounds x="432" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_01gl1g0_di" bpmnElement="Activity_08q46gz">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

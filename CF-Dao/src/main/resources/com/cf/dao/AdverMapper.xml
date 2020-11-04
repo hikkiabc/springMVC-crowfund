@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cf.dao.AdverMapper">
+  <resultMap id="BaseResultMap" type="com.cf.beans.Adver">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="iconpath" jdbcType="VARCHAR" property="iconpath" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_adver
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cf.beans.Adver">
+    insert into t_adver (id, name, status, 
+      iconpath, userid, url
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{iconpath,jdbcType=VARCHAR}, #{userid,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.cf.beans.Adver">
+    update t_adver
+    set name = #{name,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      iconpath = #{iconpath,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, status, iconpath, userid, url
+    from t_adver
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, status, iconpath, userid, url
+    from t_adver
+  </select>
+  <select id="queryPages" resultMap="BaseResultMap">
+    select * from t_adver <where>
+    <if test="keywords!=null">
+      name like concat("%",#{keywords},"%")
+    </if>
+  </where>
+  limit #{pageNum},#{pageSize}
+  </select>
+  <select id="queryTotalCount" resultType="Integer">
+    select count(*) from t_adver <where>
+    <if test="keywords!=null">
+      name like concat("%",#{keywords},"%")
+    </if>
+  </where>
+  </select>
+</mapper>

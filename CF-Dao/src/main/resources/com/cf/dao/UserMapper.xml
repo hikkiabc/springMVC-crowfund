@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cf.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.cf.beans.User">
+
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="accname" jdbcType="VARCHAR" property="accname" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="createtime" jdbcType="VARCHAR" property="createtime" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.cf.beans.User" useGeneratedKeys="true" keyProperty="id">
+    insert into t_user (id, accname, username, 
+      password, type, createtime
+      )
+    values (#{id,jdbcType=INTEGER}, #{accname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{createtime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.cf.beans.User">
+    update t_user
+    set
+      username = #{username,jdbcType=VARCHAR},
+
+      type = #{type,jdbcType=VARCHAR}
+
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, accname, username, password, type, createtime
+    from t_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, accname, username, password, type, createtime
+    from t_user
+  </select>
+
+  <select id="login" parameterType="map" resultMap="BaseResultMap">
+       select id, accname, username, password, type, createtime
+    from t_user where accname=#{accname} and password=#{password}
+  </select>
+
+<!--  <select id="queryUserPages"  resultMap="BaseResultMap">-->
+<!--       select *-->
+<!--    from t_user limit #{pageNum},#{pageSize}-->
+<!--  </select>-->
+<!--  <select id="queryTotalUser"  resultType="Integer">-->
+<!--       select count(*)-->
+<!--    from t_user-->
+<!--  </select>-->
+  <select id="queryUserPages"  resultMap="BaseResultMap">
+       select *
+    from t_user
+    <where>
+      <if test="keywords!=null"> accname like concat("%",#{keywords},"%")</if>
+    </where>
+    order by createtime desc
+    limit #{pageNum},#{pageSize}
+  </select>
+  <select id="queryTotalUser"  resultType="Integer">
+       select count(*)
+    from t_user
+    <where>
+      <if test="keywords!=null"> accname like concat("%",#{keywords},"%")</if>
+    </where>
+  </select>
+  <delete id="deleteGroupById" >
+    delete from t_user where id in(
+        <foreach collection="array" item="i" separator=",">
+          #{i}
+        </foreach>
+      )
+  </delete>
+  <select id="queryUserRoleIdByUserId" resultType="int">
+    select role_id from t_user_role where user_id=#{id}
+  </select>
+  <select id="queryAllRoles" resultType="com.cf.beans.Role">
+    select role_id roleId,role_name roleName from t_role
+  </select>
+
+  <insert id="insertBatch" >
+    insert into t_user_role (user_id, role_id) values
+        <foreach collection="integerList" item="item" separator=",">
+          (#{userId},#{item})
+        </foreach>
+  </insert>
+
+  <delete id="deleteRoles">
+    delete from t_user_role where user_id=#{userId} and role_id in (
+        <foreach collection="integerList" item="item" separator=",">
+          #{item}
+        </foreach>
+      )
+  </delete>
+  <select id="queryPermissionsByUserId" resultType="com.cf.beans.Permission">
+    SELECT DISTINCT t_permission.* FROM `t_permission`, t_role_permission,t_user_role
+    WHERE t_permission.id=t_role_permission.permission_id
+   AND t_role_permission.`role_id`=t_user_role.`role_id`
+      and t_user_role.`user_id`=${userId} order by t_permission.id
+  </select>
+</mapper>

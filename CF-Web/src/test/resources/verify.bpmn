@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1m0gvq6" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:process id="verify_user1" name="verify_user" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_09a7hmf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_09a7hmf" sourceRef="StartEvent_1" targetRef="Activity_0o7d6jv" />
+    <bpmn:sequenceFlow id="Flow_0c5xyee" sourceRef="Activity_0o7d6jv" targetRef="Activity_0rzsri2" />
+    <bpmn:userTask id="Activity_0rzsri2" name="email_verify" activiti:assignee="${user}">
+      <bpmn:incoming>Flow_0c5xyee</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lnotlv</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0lnotlv" sourceRef="Activity_0rzsri2" targetRef="Activity_05t5tg9" />
+    <bpmn:userTask id="Activity_05t5tg9" name="process_verify" activiti:candidateGroups="admins">
+      <bpmn:incoming>Flow_0lnotlv</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tapa8p</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0zrvk10">
+      <bpmn:incoming>Flow_0tapa8p</bpmn:incoming>
+      <bpmn:outgoing>Flow_15it2yf</bpmn:outgoing>
+      <bpmn:outgoing>Flow_05sioak</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0tapa8p" sourceRef="Activity_05t5tg9" targetRef="Gateway_0zrvk10" />
+    <bpmn:endEvent id="Event_0uki71g">
+      <bpmn:incoming>Flow_15it2yf</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_15it2yf" name="yes" sourceRef="Gateway_0zrvk10" targetRef="Event_0uki71g">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${passListner}" event="take" />
+      </bpmn:extensionElements>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pass==true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_0rdxfsn">
+      <bpmn:incoming>Flow_05sioak</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_05sioak" name="no" sourceRef="Gateway_0zrvk10" targetRef="Event_0rdxfsn">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${notPassListner}" event="take" />
+      </bpmn:extensionElements>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pass==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask  id="Activity_0o7d6jv" name="sendmail" activiti:type="mail">
+      <bpmn:extensionElements>
+
+        <activiti:field name="to">
+
+          <activiti:expression><![CDATA[${to}]]></activiti:expression>
+
+        </activiti:field>
+
+        <activiti:field name="from">
+
+          <activiti:string><![CDATA[admin@my.com]]></activiti:string>
+
+        </activiti:field>
+
+        <activiti:field name="subject">
+
+          <activiti:string><![CDATA[Activity测试邮件]]></activiti:string>
+<!--          <activiti:string><![CDATA[Activity测试邮件]]></activiti:string>-->
+
+        </activiti:field>
+
+        <activiti:field name="text">
+
+          <activiti:expression><![CDATA[code:${code}]]></activiti:expression>
+
+        </activiti:field>
+
+        <activiti:field name="html">
+
+          <activiti:expression><![CDATA[html:${code}]]></activiti:expression>
+
+        </activiti:field>
+
+        <activiti:field name="charset">
+
+          <activiti:string><![CDATA[UTF-8]]></activiti:string>
+
+        </activiti:field>
+
+      </bpmn:extensionElements>
+
+      <bpmn:incoming>Flow_09a7hmf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0c5xyee</bpmn:outgoing>
+    </bpmn:serviceTask >
+<!--    <bpmn:task id="Activity_0o7d6jv" name="send_mail">-->
+<!--      <bpmn:incoming>Flow_09a7hmf</bpmn:incoming>-->
+<!--      <bpmn:outgoing>Flow_0c5xyee</bpmn:outgoing>-->
+<!--    </bpmn:task>-->
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="verify_user1">
+      <bpmndi:BPMNEdge id="Flow_09a7hmf_di" bpmnElement="Flow_09a7hmf">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0c5xyee_di" bpmnElement="Flow_0c5xyee">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="430" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lnotlv_di" bpmnElement="Flow_0lnotlv">
+        <di:waypoint x="530" y="117" />
+        <di:waypoint x="590" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tapa8p_di" bpmnElement="Flow_0tapa8p">
+        <di:waypoint x="690" y="117" />
+        <di:waypoint x="755" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15it2yf_di" bpmnElement="Flow_15it2yf">
+        <di:waypoint x="805" y="117" />
+        <di:waypoint x="872" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="830" y="99" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05sioak_di" bpmnElement="Flow_05sioak">
+        <di:waypoint x="780" y="142" />
+        <di:waypoint x="780" y="230" />
+        <di:waypoint x="872" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="789" y="183" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vqkqfa_di" bpmnElement="Activity_0rzsri2">
+        <dc:Bounds x="430" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1f03kz0_di" bpmnElement="Activity_05t5tg9">
+        <dc:Bounds x="590" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0zrvk10_di" bpmnElement="Gateway_0zrvk10" isMarkerVisible="true">
+        <dc:Bounds x="755" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0uki71g_di" bpmnElement="Event_0uki71g">
+        <dc:Bounds x="872" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rdxfsn_di" bpmnElement="Event_0rdxfsn">
+        <dc:Bounds x="872" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xro3w2_di" bpmnElement="Activity_0o7d6jv">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
